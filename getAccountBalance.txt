@@ -1,0 +1,2 @@
+At last add the account you using
+sudo curl http://127.0.0.1:3001/v2/accounts/ak_fUq2NesPXcYZ1CcqBcGC3StpdnQw3iVxMA3YSeCNAwfN4myQk

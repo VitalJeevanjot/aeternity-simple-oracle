@@ -1,0 +1,50 @@
+// THIS IS NOT SECURITY AUDITED
+// DO NEVER USE THIS WITHOUT SECURITY AUDIT FIRST
+payable contract CreateOracle =
+    record state = {
+        source_oracle : oracle(string, string),
+        id_query : map(address, oracle_query(string, string))
+      }
+
+    stateful entrypoint init () = 
+      let greeter_oracle : oracle(string, string) = register_oracle(5, 500)
+      {source_oracle = greeter_oracle,
+        id_query = {}}
+
+    stateful function register_oracle(      						
+        qfee : int,     						 //Minimum payment fee
+        rttl : int) : oracle(string, string) =   //oracle expiration time blocks
+      Oracle.register(Contract.address, qfee, RelativeTTL(rttl))
+
+    stateful entrypoint extend_oracle(  							
+                                o   : oracle(string, string),	//oracle address
+                                ttl : int) : unit =		//oracle expiration time blocks 
+      Oracle.extend(o, RelativeTTL(ttl))
+
+    entrypoint get_question(  								
+                o : oracle(string, string),    		            //oracle address
+                q : oracle_query(string, string)) : string =    //id of query in oracle
+      Oracle.get_question(o, q)    
+
+    entrypoint get__answer(  
+        o : oracle(string, string),  					        //oracle address
+        q : oracle_query(string, string)) : option(string) =    //id of query in oracle
+      Oracle.get_answer(o, q)  
+
+    payable stateful entrypoint create_query(
+        q    : string,      				//question
+        qfee : int,         				//fee
+        qttl : int,         				//last height oracle to post a reply
+        rttl : int) : oracle_query(string, string) =  //time stays on the chain
+      require(qfee =< Call.value, "insufficient value for qfee")    	//check the fee
+      let query : oracle_query(string, string) = Oracle.query(state.source_oracle, q, qfee, RelativeTTL(qttl), RelativeTTL(rttl))
+      put(state{id_query[Call.caller] = query })
+      query
+    
+    stateful entrypoint respond(  
+            o    : oracle(string, string),  	   //oracle address
+            q    : oracle_query(string, string),   //id of query in oracle
+            r    : string) =  			           //reply
+      Oracle.respond(o, q, r)
+
+    
