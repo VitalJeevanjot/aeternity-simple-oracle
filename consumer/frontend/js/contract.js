@@ -1,4 +1,4 @@
-// THIS IS NOT SECURITY AUDITED
+var contractSource = `// THIS IS NOT SECURITY AUDITED
 // DO NEVER USE THIS WITHOUT SECURITY AUDIT FIRST
 
 payable contract CreateOracle =
@@ -50,4 +50,6 @@ payable contract CreateOracle =
             r    : string) =  			           //reply
       Oracle.respond(o, q, r)
 
-    
+    `
+
+var contractAddress = 'ct_29wpnHnKDR6DPcEwPvkQj8xkrJVw9k1AWcSm6pUJgSehoBGru6'

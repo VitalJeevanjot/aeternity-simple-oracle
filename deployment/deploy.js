@@ -15,15 +15,12 @@
  *  PERFORMANCE OF THIS SOFTWARE.
  */
 const Deployer = require('aeproject-lib').Deployer;
+const fs = require('fs');
 
 const deploy = async (network, privateKey, compiler, networkId) => {
     let deployer = new Deployer(network, privateKey, compiler, networkId)
-
     let deployedContract = await deployer.deploy("./contracts/CreateOracle.aes")
-
-    let result = await deployedContract.register_oracle(0, 500)
-    console.log(result.decodedResult)
-
+    fs.writeFileSync(__dirname + "/../data/contract_address.txt", deployedContract.address)
 };
 
 module.exports = {

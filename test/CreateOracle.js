@@ -16,7 +16,7 @@
  */
 
 const Deployer = require('aeproject-lib').Deployer;
-// const { Universal, Node, MemoryAccount, Crypto } = require('@aeternity/aepp-sdk');
+
 const ORACLE_CONTRACT_PATH = "./contracts/CreateOracle.aes";
 
 describe('Create Oracle', () => {
@@ -28,7 +28,6 @@ describe('Create Oracle', () => {
   let queryString = "How can I help you";
 
   before(async () => {
-    console.log(ownerKeyPair)
     deployer = new Deployer('local', ownerKeyPair.secretKey)
   })
 
@@ -37,8 +36,6 @@ describe('Create Oracle', () => {
 
     await assert.isFulfilled(deployedPromise, 'Could not deploy the Oracle Smart Contract'); // Check whether it's deployed
     instance = await Promise.resolve(deployedPromise)
-    console.log(instance)
-    console.log(await instance.create_query.toString())
   })
 
 
