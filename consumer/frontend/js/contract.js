@@ -2,14 +2,14 @@ var contractSource = `// THIS IS NOT SECURITY AUDITED
 // DO NEVER USE THIS WITHOUT SECURITY AUDIT FIRST
 
 payable contract CreateOracle =
-    datatype event = QueryCreated(oracle_query(string, string), address, int)
+    datatype event = QueryCreated(int)
     record state = {
         source_oracle : oracle(string, string),
         id_query : map(int, oracle_query(string, string)),
         queries: int
       }
 
-    entrypoint getQueries (): int =
+    entrypoint get_queries (): int =
       state.queries
 
     stateful entrypoint init () = 
@@ -41,15 +41,18 @@ payable contract CreateOracle =
       let query : oracle_query(string, string) = Oracle.query(state.source_oracle, q, qfee, RelativeTTL(qttl), RelativeTTL(rttl))
       put(state{queries = state.queries + 1})
       put(state{id_query[state.queries] = query })
-      Chain.event(QueryCreated(query, Call.caller, state.queries))
+      Chain.event(QueryCreated(state.queries))
       query
     
-    stateful entrypoint respond(  
-            o    : oracle(string, string),  	   //oracle address
+    entrypoint get_query_address(id: int) :oracle_query(string, string) =
+      state.id_query[id]
+
+    stateful entrypoint respond(
             q    : oracle_query(string, string),   //id of query in oracle
             r    : string) =  			           //reply
-      Oracle.respond(o, q, r)
+      Oracle.respond(state.source_oracle, q, r)
 
+    
     `
 
-var contractAddress = 'ct_29wpnHnKDR6DPcEwPvkQj8xkrJVw9k1AWcSm6pUJgSehoBGru6'
+var contractAddress = 'ct_dV9aB8Pryhw2KAZeVsiTLF23XTSUAYVMvpuz7CTwj1gYDuRk9'

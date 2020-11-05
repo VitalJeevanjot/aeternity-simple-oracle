@@ -5,13 +5,11 @@ const keyPair = {
 
 var getCurrentQueriesCount = 0
 var client = null
+var contract = null
 async function init () {
-  // client = Ae.Aepp()
-  // console.log(client)
-
   const node1 = await Ae.Node({ url: 'https://sdk-testnet.aepps.com', internalUrl: 'https://sdk-testnet.aepps.com' })
   const acc1 = Ae.MemoryAccount({ keypair: keyPair })
-  const client = await Ae.Universal({
+  client = await Ae.Universal({
     nodes: [
       { name: 'someNode', instance: node1 },
     ],
@@ -21,11 +19,24 @@ async function init () {
     ],
     address: keyPair.publicKey
   })
-  const contract = await client.getContractInstance(contractSource, { contractAddress })
-  getCurrentQueriesCount = await contract.call('getQueries', [], { callStatic: true }).catch(e => console.error(e))
+  contract = await client.getContractInstance(contractSource, { contractAddress })
+  getCurrentQueriesCount = await contract.call('get_queries', [], { callStatic: true }).catch(e => console.error(e))
   console.log(getCurrentQueriesCount.decodedResult)
 }
 init()
 async function onAsking () {
+  var getString = $("#city_name").val()
+  var call_registerOracle = await contract.call('create_query', [getString, 10, 100, 100], { amount: 10 }).catch(e => console.error(e))
+  console.log(call_registerOracle)
+}
 
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(showPosition);
+} else {
+  window.alert("Geolocation is not supported by this browser.")
+}
+
+function showPosition (position) {
+  $("#city_name").val(position.coords.latitude + "," + position.coords.longitude)
 }
