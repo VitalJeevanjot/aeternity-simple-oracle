@@ -43,10 +43,9 @@ async function fullFillQuery (query_id) {
   console.log(question.decodedResult)
 
   var lat_long = question.decodedResult.split(",")
-  console.log(lat_long)
   axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat_long[0]}&lon=${lat_long[1]}&appid=${conf.weather_key}`).then(async (res) => {
-    let response = await contract.methods.respond(query.decodedResult, res.data.main.temp)
-    console.log(response.decodedResult)
+    let response = await contract.methods.respond(query.decodedResult, res.data.main.temp.toString())
+    console.log(response)
   })
 
 }
@@ -77,10 +76,10 @@ client.on('connect', function (connection) {
       if (message.utf8Data !== "connected") {
         dataToDecode = JSON.parse(message.utf8Data)
         if (dataToDecode.payload) {
-          console.log(dataToDecode)
           var hash = dataToDecode.payload.hash
           axios.get(`https://testnet.aeternity.io/v2/transactions/${hash}/info`).then((res) => {
-            if (res.data.call_info.log.length >= 1) {
+
+            if (res.data.call_info.log.length > 0) {
               var current_query_index = res.data.call_info.log[0].topics[1]
               if (processedIndex !== current_query_index) {
                 fullFillQuery(current_query_index)
@@ -97,9 +96,7 @@ client.on('connect', function (connection) {
   });
   function sendSubscriptionRequest () {
     if (connection.connected) {
-      var number = Math.round(Math.random() * 0xFFFFFF);
       connection.sendUTF(`{"op":"Subscribe",  "payload": "Object", "target":"${contract_address}"}`);
-      // setTimeout(sendNumber, 1000);
     }
   }
   sendSubscriptionRequest();
