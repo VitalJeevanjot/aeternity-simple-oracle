@@ -45,3 +45,4 @@ There are much more endpoints to learn about, Some are oracle specific, Visit:- 
 To learn more about AeProject, Visit https://aeproject.gitbook.io/aeproject/
 
 ## To learn how to build this from start, Visit https://medium.com/@jeevanjotsinghvital/weather-oracle-with-aeternity-from-scratch-97ee04625463
+## To check how it works, Visit: https://www.youtube.com/watch?v=gPuhMhC-q-Y
