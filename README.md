@@ -43,4 +43,5 @@ There are much more endpoints to learn about, Some are oracle specific, Visit:- 
 
 > The keypairs use in this repo have enough Testnet aeternity to go a long way with current fee standard. But you can always get yours with `aeproject export-config` command
 To learn more about AeProject, Visit https://aeproject.gitbook.io/aeproject/
-To learn how to build this from start, Visit https://medium.com/@jeevanjotsinghvital/weather-oracle-with-aeternity-from-scratch-97ee04625463
+
+## To learn how to build this from start, Visit https://medium.com/@jeevanjotsinghvital/weather-oracle-with-aeternity-from-scratch-97ee04625463
